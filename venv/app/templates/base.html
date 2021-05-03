@@ -1,7 +1,7 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
-    {% if title %}{{ title }} - Microblog{% else %}{{ _('Welcome to Microblog') }}{% endif %}
+    {% if title %}{{ title }} - SoNYC STAT {% else %}{{ _('Welcome to SoNYC STAT') }}{% endif %}
 {% endblock %}
 
 {% block navbar %}
@@ -18,8 +18,8 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('index') }}">{{ _('Home') }}</a></li>
-                    <li><a href="{{ url_for('explore') }}">{{ _('Explore') }}</a></li>
+                    <li><a href="{{ url_for('index') }}">{{ _('Compare') }}</a></li>
+                    <li><a href="{{ url_for('explore') }}">{{ _('Search') }}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
@@ -53,7 +53,7 @@
     {{ super() }}
     {{ moment.include_moment() }}
     {{ moment.lang(g.locale) }}
-    <script>
+    <!-- <script>
         function translate(sourceElem, destElem, sourceLang, destLang) {
             $(destElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
             $.post('/translate', {
@@ -66,5 +66,5 @@
                 $(destElem).text("{{ _('Error: Could not contact server.') }}");
             });
         }
-    </script>
+    </script> -->
 {% endblock %}
