@@ -75,7 +75,7 @@ def authorize(auth_token):
     }
 
     #python 3 or above
-    base64encoded = base64.b64encode((CLIENT_ID' + ':' + CLIENT_SECRET).encode())
+    base64encoded = base64.b64encode((CLIENT_ID + ':' + CLIENT_SECRET).encode())
     headers = {"Authorization": "Basic {}".format(base64encoded.decode())}
 
     post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload, headers=headers)
