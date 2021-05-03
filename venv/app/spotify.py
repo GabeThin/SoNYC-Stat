@@ -43,7 +43,7 @@ CLIENT_SECRET = '37a907df23374db5b9ac602f4847c2b4'
 # your spotify dev account as well *
 REDIRECT_URI = 'http://localhost:5000/callback/'
 SCOPE = 'playlist-modify-public playlist-modify-private user-read-recently-played user-top-read'
-STATE = ""
+STATE = ''
 SHOW_DIALOG_bool = True
 SHOW_DIALOG_str = str(SHOW_DIALOG_bool).lower()
 
@@ -75,15 +75,10 @@ def authorize(auth_token):
     }
 
     #python 3 or above
-    if sys.version_info[0] >= 3:
-        base64encoded = base64.b64encode(("{}:{}".format(CLIENT_ID, CLIENT_SECRET)).encode())
-        headers = {"Authorization": "Basic {}".format(base64encoded.decode())}
-    else:
-        base64encoded = base64.b64encode("{}:{}".format(CLIENT_ID, CLIENT_SECRET))
-        headers = {"Authorization": "Basic {}".format(base64encoded)}
+    base64encoded = base64.b64encode((CLIENT_ID' + ':' + CLIENT_SECRET).encode())
+    headers = {"Authorization": "Basic {}".format(base64encoded.decode())}
 
-    post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload,
-                                 headers=headers)
+    post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload, headers=headers)
 
     # tokens are returned to the app
     response_data = json.loads(post_request.text)
