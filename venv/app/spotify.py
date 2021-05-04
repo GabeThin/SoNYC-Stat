@@ -41,7 +41,7 @@ CLIENT_SECRET = '37a907df23374db5b9ac602f4847c2b4'
 # server side parameter
 # * fell free to change it if you want to, but make sure to change in
 # your spotify dev account as well *
-REDIRECT_URI = 'http://localhost:5000/callback/'
+REDIRECT_URI = 'http://localhost:5000/index/'
 SCOPE = 'playlist-modify-public playlist-modify-private user-read-recently-played user-top-read'
 STATE = ''
 SHOW_DIALOG_bool = True
@@ -74,11 +74,12 @@ def authorize(auth_token):
         "redirect_uri": REDIRECT_URI
     }
 
-    #python 3 or above
     base64encoded = base64.b64encode((CLIENT_ID + ':' + CLIENT_SECRET).encode())
     headers = {"Authorization": "Basic {}".format(base64encoded.decode())}
 
     post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload, headers=headers)
+
+    print(post_request)
 
     # tokens are returned to the app
     response_data = json.loads(post_request.text)
@@ -88,6 +89,8 @@ def authorize(auth_token):
     auth_header = {"Authorization": "Bearer {}".format(access_token)}
     return auth_header
 
+
+# authorize(auth_token)
 # # ---------------- 2. ARTISTS ------------------------
 # # https://developer.spotify.com/web-api/artist-endpoints/
 #
