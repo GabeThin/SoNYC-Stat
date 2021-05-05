@@ -1,10 +1,5 @@
 {% extends "base.html" %}
 
-{% block styles %}
-{{super()}}
-  <link href="{{ _('%(theme_url)s', theme_url=theme) }}" rel="stylesheet">
-{% endblock %}
-
 {% block app_content %}
     <h1>File Not Found</h1>
     <p><a href="{{ url_for('index') }}">Back</a></p>
