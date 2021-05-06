@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath vena app app:app --preload --workers 1
+web: gunicorn --chdir venv app __init__:app --preload --workers 1
