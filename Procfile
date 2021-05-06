@@ -1,1 +1,1 @@
-web: gunicorn app:venv/app/__init__.py
+web: gunicorn venv/app/__init__:app
