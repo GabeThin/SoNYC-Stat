@@ -57,7 +57,7 @@ def login():
         'client_id': client_id
     }
 
-    
+
 
     url = auth_url + '&' + 'response_type=' + auth['response_type'] + '&redirect_uri=' + auth['redirect_uri'] + '&scope=' + auth['scope'] + '&client_id=' + auth['client_id']
     return redirect(url)
@@ -87,8 +87,8 @@ def callback():
 
     return redirect(url_for('home'))
 
-@app.route('/home')
-def home():
+# @app.route('/home')
+# def home():
 
 
 # @app.route('/logout')
