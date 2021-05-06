@@ -1,1 +1,1 @@
-web: gunicorn venv/app/__init__:app
+web: gunicorn venv/app/app:app --preload --workers 1
