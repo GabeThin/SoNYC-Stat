@@ -44,5 +44,5 @@ bootstrap = Bootstrap(app)
 #     app.logger.setLevel(logging.INFO)
 #     app.logger.info('Microblog startup')
 
-
+app.run()
 from app import routes, models, errors

@@ -16,7 +16,7 @@ except ImportError:
     1. USER AUTHORIZATION
     2. ARTISTS
     3. SEARCH
-    4. USER RELATED REQUETS (NEEDS OAUTH)
+    4. USER RELATED REQUESTS (NEEDS OAUTH)
     5. ALBUMS
     6. USERS
     7. TRACKS
@@ -41,7 +41,7 @@ CLIENT_SECRET = '37a907df23374db5b9ac602f4847c2b4'
 # server side parameter
 # * fell free to change it if you want to, but make sure to change in
 # your spotify dev account as well *
-REDIRECT_URI = 'http://localhost:5000/index/'
+REDIRECT_URI = 'http://localhost:5000/callback'
 SCOPE = 'playlist-modify-public playlist-modify-private user-read-recently-played user-top-read'
 STATE = ''
 SHOW_DIALOG_bool = True

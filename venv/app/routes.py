@@ -1,24 +1,17 @@
-from flask import render_template, flash, redirect, url_for, request, jsonify, g
+from flask import render_template, flash, redirect, url_for, request, jsonify, g, session
 from flask_login import current_user, login_user, logout_user, login_required
 # from flask_babel import _, get_locale
-from app import app, db, spotify
+from app import app, db, spotify_test
 # from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.forms import LoginForm, EditProfileForm, EmptyForm, PostForm
 from app.models import User, Post
 from werkzeug.urls import url_parse
 from datetime import datetime
+import base64, json, requests
+
 
 client_id = 'f5eb6f7b95d84bd48dea9a50c1cca18f'
 client_secret = '37a907df23374db5b9ac602f4847c2b4'
-
-@app.route('/callback/')
-def callback():
-
-    auth_token = request.args['code']
-    auth_header = spotify.authorize(auth_token)
-    session['auth_header'] = auth_header
-
-    return profile()
 
 # @app.before_request
 # def before_request():
@@ -31,7 +24,7 @@ def callback():
 @app.route('/index', methods=['GET', 'POST'])
 def index():
 
-    return render_template('index.html', username='gabe')
+    return render_template('index.html', username='gabe', )
 # @app.route('/', methods=['GET', 'POST'])
 # @app.route('/index', methods=['GET', 'POST'])
 # @login_required
@@ -59,13 +52,44 @@ def login():
 
     auth = {
         'response_type': 'code',
-        'redirect_uri': 'http://localhost:5000',
+        'redirect_uri': 'http://localhost:5000/callback',
         'scope': scope,
         'client_id': client_id
     }
 
+    
+
     url = auth_url + '&' + 'response_type=' + auth['response_type'] + '&redirect_uri=' + auth['redirect_uri'] + '&scope=' + auth['scope'] + '&client_id=' + auth['client_id']
     return redirect(url)
+
+@app.route('/callback')
+def callback():
+    print(request)
+    auth_token = request.args['code']
+
+    code = {
+        'grant_type': 'authorization_code',
+        'code': str(auth_token),
+        'redirect_uri': 'http://localhost:5000/callback'
+    }
+
+    encoded = base64.b64encode((client_id + ':' + client_secret).encode())
+    headers = {'Authorization': 'Basic ' + encoded.decode()}
+
+    post_request = requests.post('https://accounts.spotify.com/api/token', data=code, headers=headers)
+
+    response_data = json.loads(post_request.text)
+
+    access_token = response_data['access_token']
+    auth_header = {'Authorization': 'Bearer ' + access_token}
+    session['auth_header'] = auth_header
+
+
+    return redirect(url_for('home'))
+
+@app.route('/home')
+def home():
+
 
 # @app.route('/logout')
 # def logout():
