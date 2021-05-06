@@ -87,9 +87,9 @@ def callback():
 
     return redirect(url_for('home'))
 
-# @app.route('/home')
-# def home():
-
+@app.route('/home')
+def home():
+    return redirect('https://www.youtube.com')
 
 # @app.route('/logout')
 # def logout():
