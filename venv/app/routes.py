@@ -52,7 +52,7 @@ def login():
 
     auth = {
         'response_type': 'code',
-        'redirect_uri': 'http://localhost:5000/callback',
+        'redirect_uri': 'https://sonyc-stat.herokuapp.com/callback',
         'scope': scope,
         'client_id': client_id
     }
@@ -70,7 +70,7 @@ def callback():
     code = {
         'grant_type': 'authorization_code',
         'code': str(auth_token),
-        'redirect_uri': 'http://localhost:5000/callback'
+        'redirect_uri': 'https://sonyc-stat.herokuapp.com/callback'
     }
 
     encoded = base64.b64encode((client_id + ':' + client_secret).encode())

@@ -17,7 +17,7 @@ CLIENT_SECRET = '37a907df23374db5b9ac602f4847c2b4'
 # SPOTIPY_CLIENT_ID = 'f5eb6f7b95d84bd48dea9a50c1cca18f'
 # SPOTIPY_CLIENT_SECRET = '37a907df23374db5b9ac602f4847c2b4'
 USERNAME = 'ssfvyd28qne3pasisps4exnlu'
-REDIRECT_URI = 'http://localhost:5000/callback'
+REDIRECT_URI = 'https://sonyc-stat.herokuapp.com/callback'
 
 SCOPE = 'user-read-private user-read-email playlist-modify-public playlist-modify-private user-read-recently-played user-top-read user-library-read'
 
