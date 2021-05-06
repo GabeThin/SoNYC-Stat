@@ -1,1 +1,1 @@
-web:gunicorn sonyc-stat.wsgi
+web: gunicorn app:app
