@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify, g, session
 from flask_login import current_user, login_user, logout_user, login_required
 # from flask_babel import _, get_locale
-from app import app, db, spotify_test
+from app import app, db, spotify_test, spotify
 # from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.forms import LoginForm, EditProfileForm, EmptyForm, PostForm
 from app.models import User, Post
@@ -13,20 +13,21 @@ import base64, json, requests
 client_id = 'f5eb6f7b95d84bd48dea9a50c1cca18f'
 client_secret = '37a907df23374db5b9ac602f4847c2b4'
 
-# @app.before_request
-# def before_request():
-#     if current_user.is_authenticated:
-#         current_user.last_seen = datetime.utcnow()
-#         db.session.commit()
-#     g.locale = str(get_locale())
+redirect_base = 'http://localhost:5000'
+
+@app.before_request
+def before_request():
+    if not session['logged_in']:
+        session['logged_in'] = False
+
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
+    # artist = spotify.artist('0OdUWJ0sBjDrqHygGUXeCF')
 
-    return render_template('index.html', username='gabe', )
-# @app.route('/', methods=['GET', 'POST'])
-# @app.route('/index', methods=['GET', 'POST'])
+    return render_template('index.html', username='gabe', logged_in=session['logged_in'])
+
 # @login_required
 # def index():
 #     form = PostForm()
@@ -52,12 +53,10 @@ def login():
 
     auth = {
         'response_type': 'code',
-        'redirect_uri': 'https://sonyc-stat.herokuapp.com/callback',
+        'redirect_uri': redirect_base + '/callback',
         'scope': scope,
         'client_id': client_id
     }
-
-
 
     url = auth_url + '&' + 'response_type=' + auth['response_type'] + '&redirect_uri=' + auth['redirect_uri'] + '&scope=' + auth['scope'] + '&client_id=' + auth['client_id']
     return redirect(url)
@@ -70,7 +69,7 @@ def callback():
     code = {
         'grant_type': 'authorization_code',
         'code': str(auth_token),
-        'redirect_uri': 'https://sonyc-stat.herokuapp.com/callback'
+        'redirect_uri': redirect_base + '/callback'
     }
 
     encoded = base64.b64encode((client_id + ':' + client_secret).encode())
@@ -84,8 +83,9 @@ def callback():
     auth_header = {'Authorization': 'Bearer ' + access_token}
     session['auth_header'] = auth_header
 
+    session['logged_in'] = True
 
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 @app.route('/home')
 def home():

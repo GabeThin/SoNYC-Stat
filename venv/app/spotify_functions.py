@@ -1,18 +1,106 @@
+from __future__ import print_function
 import base64
 import json
 import requests
 import sys
 
-artists_url = 'https://api.spotify.com/v1/artists'
-GET_ARTIST_ENDPOINT = 'https://api.spotify.com/v1/artists'
-search_url = 'https://api.spotify.com/v1/search'
-user_url = 'https://api.spotify.com/v1/me'
+# Workaround to support both python 2 & 3
+try:
+    import urllib.request, urllib.error
+    import urllib.parse as urllibparse
+except ImportError:
+    import urllib as urllibparse
+'''
+    --------------------- HOW THIS FILE IS ORGANIZED --------------------
+    0. SPOTIFY BASE URL
+    1. USER AUTHORIZATION
+    2. ARTISTS
+    3. SEARCH
+    4. USER RELATED REQUESTS (NEEDS OAUTH)
+    5. ALBUMS
+    6. USERS
+    7. TRACKS
+'''
+
+# ----------------- 0. SPOTIFY BASE URL ----------------
+
+SPOTIFY_API_BASE_URL = 'https://api.spotify.com'
+API_VERSION = "v1"
+SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
+
+# ----------------- 1. USER AUTHORIZATION ----------------
+
+# spotify endpoints
+SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize'
+SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
+
+# client keys
+CLIENT_ID = 'f5eb6f7b95d84bd48dea9a50c1cca18f'
+CLIENT_SECRET = '37a907df23374db5b9ac602f4847c2b4'
+
+# server side parameter
+# * fell free to change it if you want to, but make sure to change in
+# your spotify dev account as well *
+REDIRECT_URI = 'http://localhost:5000/callback'
+SCOPE = 'playlist-modify-public playlist-modify-private user-read-recently-played user-top-read'
+STATE = ''
+SHOW_DIALOG_bool = True
+SHOW_DIALOG_str = str(SHOW_DIALOG_bool).lower()
+
+# https://developer.spotify.com/web-api/authorization-guide/
+# authentication = {
+#     'response_type': 'code',
+#     'redirect_uri': REDIRECT_URI,
+#     'scope': SCOPE,
+#     'client_id': CLIENT_ID
+# }
+#
+# for key, val in list(authentication.items()):
+#     URL_ARGS = "&".join(["{}={}".format(key, urllibparse.quote(val))])
+#
+# AUTH_URL = 'https://accounts.spotify.com/authorize/?{}'.format(URL_ARGS)
+
+'''
+    This function must be used with the callback method present in the
+    ../app.py file.
+    And of course this will only works if ouath == True
+'''
+
+# def authorize(auth_token):
+#
+#     code_payload = {
+#         "grant_type": "authorization_code",
+#         "code": str(auth_token),
+#         "redirect_uri": REDIRECT_URI
+#     }
+#
+#     base64encoded = base64.b64encode((CLIENT_ID + ':' + CLIENT_SECRET).encode())
+#     headers = {"Authorization": "Basic {}".format(base64encoded.decode())}
+#
+#     post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload, headers=headers)
+#
+#     print(post_request)
+#
+#     # tokens are returned to the app
+#     response_data = json.loads(post_request.text)
+#     access_token = response_data["access_token"]
+#
+#     # use the access token to access Spotify API
+#     auth_header = {"Authorization": "Bearer {}".format(access_token)}
+#     return auth_header
+
+
+
+# ---------------- 2. ARTISTS ------------------------
+# https://developer.spotify.com/web-api/artist-endpoints/
+
+GET_ARTIST_ENDPOINT = "{}/{}".format(SPOTIFY_API_URL, 'artists')  # /<id>
+
 
 # https://developer.spotify.com/web-api/get-artist/
-def artist(artist_id):
+def get_artist(artist_id):
     url = "{}/{id}".format(GET_ARTIST_ENDPOINT, id=artist_id)
     resp = requests.get(url)
-    print(resp)
     return resp.json()
 
 
@@ -23,25 +111,30 @@ def artist(artist_id):
 #     return resp.json()
 
 # https://developer.spotify.com/web-api/get-artists-albums/
-def artist_albums(artist_id):
+def get_artists_albums(artist_id):
     url = "{}/{id}/albums".format(GET_ARTIST_ENDPOINT, id=artist_id)
     resp = requests.get(url)
     return resp.json()
 
 # https://developer.spotify.com/web-api/get-artists-top-tracks/
-def artist_top_tracks(artist_id, country='US'):
+def get_artists_top_tracks(artist_id, country='US'):
     url = "{}/{id}/top-tracks".format(GET_ARTIST_ENDPOINT, id=artist_id)
     myparams = {'country': country}
     resp = requests.get(url, params=myparams)
     return resp.json()
 
 # https://developer.spotify.com/web-api/get-related-artists/
-# def get_related_artists(artist_id):
-#     url = "{}/{id}/related-artists".format(GET_ARTIST_ENDPOINT, id=artist_id)
-#     resp = requests.get(url)
-#     return resp.json()
+def get_related_artists(artist_id):
+    url = "{}/{id}/related-artists".format(GET_ARTIST_ENDPOINT, id=artist_id)
+    resp = requests.get(url)
+    return resp.json()
 
 # ----------------- 3. SEARCH ------------------------
+# https://developer.spotify.com/web-api/search-item/
+
+SEARCH_ENDPOINT = "{}/{}".format(SPOTIFY_API_URL, 'search')
+
+
 # https://developer.spotify.com/web-api/search-item/
 def search(search_type, name):
     if search_type not in ['artist', 'track', 'album', 'playlist']:
@@ -56,12 +149,13 @@ def search(search_type, name):
 
 
 # spotify endpoints
-USER_PLAYLISTS_ENDPOINT = "{}/{}".format(user_url, 'playlists')
+USER_PROFILE_ENDPOINT = "{}/{}".format(SPOTIFY_API_URL, 'me')
+USER_PLAYLISTS_ENDPOINT = "{}/{}".format(USER_PROFILE_ENDPOINT, 'playlists')
 USER_TOP_ARTISTS_AND_TRACKS_ENDPOINT = "{}/{}".format(
-    user_url, 'top')  # /<type>
-USER_RECENTLY_PLAYED_ENDPOINT = "{}/{}/{}".format(user_url,
+    USER_PROFILE_ENDPOINT, 'top')  # /<type>
+USER_RECENTLY_PLAYED_ENDPOINT = "{}/{}/{}".format(USER_PROFILE_ENDPOINT,
                                                   'player', 'recently-played')
-BROWSE_FEATURED_PLAYLISTS = "{}/{}/{}".format('https://api.spotify.com/v1', 'browse',
+BROWSE_FEATURED_PLAYLISTS = "{}/{}/{}".format(SPOTIFY_API_URL, 'browse',
                                               'featured-playlists')
 
 
@@ -104,7 +198,7 @@ def get_featured_playlists(auth_header):
 # ---------------- 5. ALBUMS ------------------------
 # https://developer.spotify.com/web-api/album-endpoints/
 
-GET_ALBUM_ENDPOINT = "{}/{}".format('https://api.spotify.com/v1', 'albums')  # /<id>
+GET_ALBUM_ENDPOINT = "{}/{}".format(SPOTIFY_API_URL, 'albums')  # /<id>
 
 # https://developer.spotify.com/web-api/get-album/
 def get_album(album_id):
@@ -127,7 +221,7 @@ def get_albums_tracks(album_id):
 # ------------------ 6. USERS ---------------------------
 # https://developer.spotify.com/web-api/user-profile-endpoints/
 
-GET_USER_ENDPOINT = '{}/{}'.format('https://api.spotify.com/v1', 'users')
+GET_USER_ENDPOINT = '{}/{}'.format(SPOTIFY_API_URL, 'users')
 
 # https://developer.spotify.com/web-api/get-users-profile/
 def get_user_profile(user_id):
@@ -138,7 +232,7 @@ def get_user_profile(user_id):
 # ---------------- 7. TRACKS ------------------------
 # https://developer.spotify.com/web-api/track-endpoints/
 
-GET_TRACK_ENDPOINT = "{}/{}".format('https://api.spotify.com/v1', 'tracks')  # /<id>
+GET_TRACK_ENDPOINT = "{}/{}".format(SPOTIFY_API_URL, 'tracks')  # /<id>
 
 # https://developer.spotify.com/web-api/get-track/
 def get_track(track_id):
