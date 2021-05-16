@@ -1,17 +1,38 @@
+from flask import session, redirect, url_for
 import base64
 import json
 import requests
 import sys
 
 artists_url = 'https://api.spotify.com/v1/artists'
-GET_ARTIST_ENDPOINT = 'https://api.spotify.com/v1/artists'
 search_url = 'https://api.spotify.com/v1/search'
 user_url = 'https://api.spotify.com/v1/me'
+client_id = 'f5eb6f7b95d84bd48dea9a50c1cca18f'
+client_secret = '37a907df23374db5b9ac602f4847c2b4'
+
+
+def refresh():
+    code = {
+        'grant_type': 'refresh_token',
+        'refresh_token': session['refresh_token']
+    }
+
+    encoded = base64.b64encode((client_id + ':' + client_secret).encode())
+    headers = {'Authorization': 'Basic ' + encoded.decode()}
+
+    post_request = requests.post('https://accounts.spotify.com/api/token', data=code, headers=headers)
+
+    response_data = json.loads(post_request.text)
+
+    access_token = response_data['access_token']
+
+    auth_header = {'Authorization': 'Bearer ' + access_token}
+    session['auth_header'] = auth_header
 
 def artist(artist_id):
-    url = "{}/{id}".format(GET_ARTIST_ENDPOINT, id=artist_id)
-    resp = requests.get(url)
-    print(resp)
+    refresh()
+    url = artists_url + '/' + artist_id
+    resp = requests.get(url, headers=session['auth_header'])
     return resp.json()
 
 
@@ -21,30 +42,26 @@ def artist(artist_id):
 #     return resp.json()
 
 def artist_albums(artist_id):
-    url = "{}/{id}/albums".format(GET_ARTIST_ENDPOINT, id=artist_id)
+    url = artists_url + '/' + artist_id + '/albums'
     resp = requests.get(url)
     return resp.json()
 
 def artist_top_tracks(artist_id, country='US'):
-    url = "{}/{id}/top-tracks".format(GET_ARTIST_ENDPOINT, id=artist_id)
+    url = artists_url + '/' + artist_id + '/top-tracks'
     myparams = {'country': country}
     resp = requests.get(url, params=myparams)
     return resp.json()
 
-# def get_related_artists(artist_id):
-#     url = "{}/{id}/related-artists".format(GET_ARTIST_ENDPOINT, id=artist_id)
-#     resp = requests.get(url)
-#     return resp.json()
-
-def search(search_type, name):
-    if search_type not in ['artist', 'track', 'album', 'playlist']:
-        print('invalid type')
-        return None
-    myparams = {'type': search_type}
-    myparams['q'] = name
-    resp = requests.get(SEARCH_ENDPOINT, params=myparams)
+def related_artists(artist_id):
+    url = artists_url + '/' + artist_id + '/related-artists'
+    resp = requests.get(url)
     return resp.json()
 
+def search(name):
+    myparams = {'type': ['artist', 'album', 'track']}
+    myparams['q'] = name
+    resp = requests.get('https://api.spotify.com/v1/search', params=myparams, headers=session['auth_header'])
+    return resp.json()
 
 
 # spotify endpoints
@@ -57,15 +74,15 @@ BROWSE_FEATURED_PLAYLISTS = "{}/{}/{}".format('https://api.spotify.com/v1', 'bro
                                               'featured-playlists')
 
 
-def get_users_profile(auth_header):
-    url = USER_PROFILE_ENDPOINT
-    resp = requests.get(url, headers=auth_header)
+def get_users_profile():
+    url = user_url
+    resp = requests.get(url, headers=session['auth_header'])
     return resp.json()
 
 
 def get_users_playlists(auth_header):
     url = USER_PLAYLISTS_ENDPOINT
-    resp = requests.get(url, headers=auth_header)
+    resp = requests.get(url, headers=session['auth_header'])
     return resp.json()
 
 
