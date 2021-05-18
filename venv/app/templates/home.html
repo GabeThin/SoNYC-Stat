@@ -1,10 +1,65 @@
-<<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <h1>Welcome</h1>
-  </body>
-</html>
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block styles %}
+{{super()}}
+<style>
+  .top_songs {
+    background-color: #190061;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    margin-left: 20px;
+    margin-right: 600px;
+  }
+  .display_main {
+    display: inline-block;
+  }
+  body {
+    background-color: black;
+  }
+  h1 {
+    color: white;
+    font-family: "Courier New";
+    margin-left: 200;
+    text-align: center;
+    
+  }
+  h2 {
+    color: white;
+    font-family: "Courier New";
+    text-align: center;
+  }
+  li {
+    color:white;
+    font-size: 20px;
+    padding-left: 20px;
+    margin-left: 275px;
+    font-family: "Courier New";
+  }
+  
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+    <h1>Welcome, {{ session['username'] }}!</h1>
+    <div class= "display_main">
+      <div class="top_songs"> 
+        <h2> Your Top Weekly Plays</h2>
+        <ol>
+          <li> Aritst 1</li>
+          <li> Aritst 2</li>
+          <li> Aritst 3</li>
+          <li> Aritst 4</li>
+          <li> Aritst 5</li>
+        </ol>
+      </div>
+    </div>
+    </h1>
+      
+  
+    
+{% endblock %}
