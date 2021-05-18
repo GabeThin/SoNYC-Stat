@@ -18,7 +18,7 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    {% if current_user.is_authenticated %}
+                    {% if session['logged_in'] %}
                       <div class="input-group rounded">
                           <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" style="margin: 7px; width: 150px">
                           <span class="input-group-text border-0" id="search-addon">

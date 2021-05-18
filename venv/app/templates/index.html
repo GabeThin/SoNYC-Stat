@@ -3,7 +3,7 @@
 
 
 {% block content %}
-    {% if current_user.is_authenticated %}
+    {% if session['logged_in'] %}
       <h1>Hi, {{ current_user.username }}!</h1>
     {% else %}
       <h1>Welcome to SoNYC Stat</h1>

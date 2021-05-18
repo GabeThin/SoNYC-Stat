@@ -1,9 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify, g, session
 from flask_login import current_user, login_user, logout_user, login_required
 # from flask_babel import _, get_locale
-from app import app, db, spotify_test, spotify, login_manager
+from app import app, db, spotify_test, spotify
 from app.forms import LoginForm, EditProfileForm, EmptyForm, PostForm
-from app.models import User, Post
 from werkzeug.urls import url_parse
 from datetime import datetime
 import base64, json, requests, threading
@@ -14,12 +13,9 @@ client_secret = '37a907df23374db5b9ac602f4847c2b4'
 
 redirect_base = 'http://localhost:5000'
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
-
-# @app.before_request
-# def before_request():
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.query.get(user_id)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -41,6 +37,7 @@ def login():
     }
 
     url = auth_url + '&' + 'response_type=' + auth['response_type'] + '&redirect_uri=' + auth['redirect_uri'] + '&scope=' + auth['scope'] + '&client_id=' + auth['client_id']
+
     return redirect(url)
 
 @app.route('/callback')
@@ -66,16 +63,14 @@ def callback():
     auth_header = {'Authorization': 'Bearer ' + access_token}
     session['auth_header'] = auth_header
 
-    user = User()
-
-    login_user(user)
+    session['logged_in'] = True
+    session['username'] = spotify.get_users_profile()['display_name']
 
     return redirect(url_for('home'))
 
 @app.route('/home')
 def home():
-    print(current_user.is_authenticated)
-    if not current_user.is_authenticated:
+    if not session['logged_in']:
         flash('You are not logged in')
         return redirect(url_for('index'))
-    print(spotify.get_users_profile())
+    return render_template('home.html')
