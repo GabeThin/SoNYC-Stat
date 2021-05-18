@@ -67,4 +67,6 @@ def home():
     if not session['logged_in']:
         flash('You are not logged in')
         return redirect(url_for('index'))
+
+    top = spotify.get_top_
     return render_template('home.html')
