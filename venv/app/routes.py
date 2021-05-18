@@ -13,16 +13,10 @@ client_secret = '37a907df23374db5b9ac602f4847c2b4'
 
 redirect_base = 'http://localhost:5000'
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(user_id)
-
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    # print(spotify.artist('0OdUWJ0sBjDrqHygGUXeCF'))
-    # print(spotify.search('nas'))
-    return render_template('index.html', username='gabe')
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
