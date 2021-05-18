@@ -78,12 +78,12 @@ def users_playlists():
 def users_top_tracks():
     url = top_tracks_url
     resp = requests.get(url, headers=session['auth_header'])
-    print(resp)
+    return resp.json()
 
 def users_top_artists():
     url = top_artists_url
     resp = requests.get(url, headers=session['auth_header'])
-    print(resp)
+    return resp.json()
 
 def users_recently_played():
     url = recents_url

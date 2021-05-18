@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify, g, session
 from flask_login import current_user, login_user, logout_user, login_required
 # from flask_babel import _, get_locale
-from app import app, db, spotify_test, spotify
+from app import app, db, spotify
 from app.forms import LoginForm, EditProfileForm, EmptyForm, PostForm
 from werkzeug.urls import url_parse
 from datetime import datetime
@@ -58,7 +58,7 @@ def callback():
     session['auth_header'] = auth_header
 
     session['logged_in'] = True
-    session['username'] = spotify.get_users_profile()['display_name']
+    session['username'] = spotify.users_profile()['display_name']
 
     return redirect(url_for('home'))
 
@@ -68,5 +68,19 @@ def home():
         flash('You are not logged in')
         return redirect(url_for('index'))
 
-    top = spotify.get_top_
+    names = []
+    artists = []
+    albums = []
+
+    top = spotify.users_top_tracks()
+
+    for i in range(0, 5):
+        names.append(top['items'][i]['name'])
+        albums.append(top['items'][i]['album']['name'])
+        # artists.append(top['items'][0]['name'])
+        
     return render_template('home.html')
+
+@app.route('/artist/<artist_id>')
+def artist(artist_id):
+    pass
