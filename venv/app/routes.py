@@ -76,4 +76,4 @@ def home():
 
 @app.route('/artist/<artist_id>')
 def artist(artist_id):
-    pass
+    return None

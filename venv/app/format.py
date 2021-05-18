@@ -8,6 +8,7 @@ class TopTracks:
     def format(self):
         data = spotify.users_top_tracks()
         for i in range(0, 5):
-            self.names.append(data['items'][i]['name'])
-            self.albums.append(data['items'][i]['album']['name'])
+            print(data)
+            # self.names.append(data['items'][i]['name'])
+            # self.albums.append(data['items'][i]['album']['name'])
             # artists.append(top['items'][0]['name'])
