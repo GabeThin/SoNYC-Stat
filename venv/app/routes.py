@@ -1,13 +1,12 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify, g, session
 from flask_login import current_user, login_user, logout_user, login_required
 # from flask_babel import _, get_locale
-from app import app, db, spotify_test, spotify
-# from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm
+from app import app, db, spotify
 from app.forms import LoginForm, EditProfileForm, EmptyForm, PostForm
-from app.models import User, Post
+from app.format import TopTracks
 from werkzeug.urls import url_parse
 from datetime import datetime
-import base64, json, requests
+import base64, json, requests, threading
 
 
 client_id = 'f5eb6f7b95d84bd48dea9a50c1cca18f'
@@ -15,36 +14,10 @@ client_secret = '37a907df23374db5b9ac602f4847c2b4'
 
 redirect_base = 'http://localhost:5000'
 
-@app.before_request
-def before_request():
-    if not session['logged_in']:
-        session['logged_in'] = False
-
-
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    # artist = spotify.artist('0OdUWJ0sBjDrqHygGUXeCF')
-
-    return render_template('index.html', username='gabe', logged_in=session['logged_in'])
-
-# @login_required
-# def index():
-#     form = PostForm()
-#     if form.validate_on_submit():
-#         language = guess_language(form.post.data)
-#         if language == 'UNKNOWN' or len(language) > 5:
-#             language = ''
-#         post = Post(body=form.post.data, author=current_user, language=language)
-#         db.session.add(post)
-#         db.session.commit()
-#         flash('Your post is now live!')
-#         return redirect(url_for('index'))
-#     page = request.args.get('page', 1, type=int)
-#     posts = current_user.followed_posts().paginate(page, app.config['POSTS_PER_PAGE'], False)
-#     next_url = url_for('index', page=posts.next_num) if posts.has_next else None
-#     prev_url = url_for('index', page=posts.prev_num) if posts.has_prev else None
-#     return render_template('index.html', title='Home', form=form, posts=posts.items, next_url=next_url, prev_url=prev_url, theme=theme_choice.url)
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -59,11 +32,11 @@ def login():
     }
 
     url = auth_url + '&' + 'response_type=' + auth['response_type'] + '&redirect_uri=' + auth['redirect_uri'] + '&scope=' + auth['scope'] + '&client_id=' + auth['client_id']
+
     return redirect(url)
 
 @app.route('/callback')
 def callback():
-    print(request)
     auth_token = request.args['code']
 
     code = {
@@ -80,18 +53,27 @@ def callback():
     response_data = json.loads(post_request.text)
 
     access_token = response_data['access_token']
+    session['refresh_token'] = response_data['refresh_token']
+
     auth_header = {'Authorization': 'Bearer ' + access_token}
     session['auth_header'] = auth_header
 
     session['logged_in'] = True
+    session['username'] = spotify.users_profile()['display_name']
 
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 @app.route('/home')
 def home():
-    return redirect('https://www.youtube.com')
+    if not session['logged_in']:
+        flash('You are not logged in')
+        return redirect(url_for('index'))
 
-# @app.route('/logout')
-# def logout():
-#     logout_user()
-#     return redirect(url_for('index'))
+    data = TopTracks()
+    data.format()
+
+    return render_template('home.html', data=data)
+
+@app.route('/artist/<artist_id>')
+def artist(artist_id):
+    pass
