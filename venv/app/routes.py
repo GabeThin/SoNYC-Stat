@@ -63,14 +63,15 @@ def callback():
 
     return redirect(url_for('home'))
 
-data = TopTracks()
-data.format()
-# data = ["song 1", "song 2", "song 3", "song 4", "song 5"]
 @app.route('/home')
 def home():
     if not session['logged_in']:
         flash('You are not logged in')
         return redirect(url_for('index'))
+
+    data = TopTracks()
+    data.format()
+
     return render_template('home.html', data=data)
 
 @app.route('/artist/<artist_id>')
