@@ -15,25 +15,23 @@
     padding-left: 10px;
   }
   a {
-    color: white; 
-    font-family: "Courier New";
-    
+    color: white;
+
   }
   h1 {
     color: white;
-    font-family: "Courier New";
   }
   h2 {
     color: white;
-    font-family: "Courier New";
   }
   body {
       color: rgb(26, 26, 26);
+      font-family: "Courier New";
   }
   nav {
       background-color: rgb(40, 40, 40);
   }
-  
+
 </style>
 {% endblock %}
 
@@ -48,10 +46,10 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="#">
-                    <img href="logo.png" width="30" height="30" alt="">
+                    <img href="logo.png" width="30" height="30" style="margin-top:5"alt="">
                   </a>
                 <a style = "font-size: 40px;" class ="navbar-brand" href="{{ url_for('index') }}">SoNYC Stat</a>
-                
+
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">

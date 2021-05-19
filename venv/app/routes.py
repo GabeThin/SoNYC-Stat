@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 # from flask_babel import _, get_locale
 from app import app, db, spotify
 from app.forms import LoginForm, EditProfileForm, EmptyForm, PostForm
-from app.format import TopTracks
+from app.format import TopTracks, TopArtists, RecentlyPlayed, Album
 from werkzeug.urls import url_parse
 from datetime import datetime
 import base64, json, requests, threading
@@ -69,11 +69,19 @@ def home():
         flash('You are not logged in')
         return redirect(url_for('index'))
 
-    data = TopTracks()
-    data.format()
+    tracks = TopTracks()
+    recents = RecentlyPlayed()
+    artists = TopArtists()
 
-    return render_template('home.html', data=data)
+    tracks.format()
+    artists.format()
+    recents.format()
 
-@app.route('/artist/<artist_id>')
-def artist(artist_id):
-    return None
+    return render_template('home.html', tracks=tracks, artists=artists, recents=recents)
+
+@app.route('/album/<album_id>')
+def album(album_id):
+    album = Album(album_id)
+    album.format()
+
+    return render_template('album.html')

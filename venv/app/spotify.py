@@ -46,20 +46,20 @@ def artist(artist_id):
 def artist_albums(artist_id):
     refresh()
     url = artists_url + '/' + artist_id + '/albums'
-    resp = requests.get(url)
+    resp = requests.get(url, headers=session['auth_header'])
     return resp.json()
 
 def artist_top_tracks(artist_id, country='US'):
     refresh()
     url = artists_url + '/' + artist_id + '/top-tracks'
     myparams = {'country': country}
-    resp = requests.get(url, params=myparams)
+    resp = requests.get(url, params=myparams, headers=session['auth_header'])
     return resp.json()
 
 def related_artists(artist_id):
     refresh()
     url = artists_url + '/' + artist_id + '/related-artists'
-    resp = requests.get(url)
+    resp = requests.get(url, headers=session['auth_header'])
     return resp.json()
 
 def search(name):
@@ -102,23 +102,23 @@ def users_recently_played():
 def album(album_id):
     refresh()
     url = album_url + '/' + album_id
-    resp = requests.get(url)
+    resp = requests.get(url, headers=session['auth_header'])
     return resp.json()
 
 def albums_tracks(album_id):
     refresh()
     url = album_url + '/' + album_id + '/tracks'
-    resp = requests.get(url)
+    resp = requests.get(url, headers=session['auth_header'])
     return resp.json()
 
 def track(track_id):
     refresh()
     url = tracks_url + '/' + track_id
-    resp = requests.get(url)
+    resp = requests.get(url, headers=session['auth_header'])
     return resp.json()
 
 def several_tracks(list_of_ids):
     refresh()
     url = "{}/?ids={ids}".format(tracks_url, ids=','.join(list_of_ids))
-    resp = requests.get(url)
+    resp = requests.get(url, headers=session['auth_header'])
     return resp.json()
