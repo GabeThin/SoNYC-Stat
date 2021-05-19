@@ -4,8 +4,41 @@
     {% if title %}{{ title }} - SoNYC STAT {% else %}{{ ('Welcome to SoNYC STAT') }}{% endif %}
 {% endblock %}
 
+{% block styles %}
+{{super()}}
+<style>
+  .top_songs {
+    background-color: #190061;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+  }
+  a {
+    color: white; 
+    font-family: "Courier New";
+    
+  }
+  h1 {
+    color: white;
+    font-family: "Courier New";
+  }
+  h2 {
+    color: white;
+    font-family: "Courier New";
+  }
+  body {
+      color: rgb(26, 26, 26);
+  }
+  nav {
+      background-color: rgb(40, 40, 40);
+  }
+  
+</style>
+{% endblock %}
+
 {% block navbar %}
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-dark bg-dark">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -14,7 +47,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('index') }}">SoNYC Stat</a>
+                <a class="navbar-brand" href="#">
+                    <img href="logo.png" width="30" height="30" alt="">
+                  </a>
+                <a style = "font-size: 40px;" class ="navbar-brand" href="{{ url_for('index') }}">SoNYC Stat</a>
+                
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">

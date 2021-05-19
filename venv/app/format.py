@@ -1,4 +1,5 @@
 from app import spotify
+print("format")
 
 class TopTracks:
     def __init__(self):
@@ -11,3 +12,6 @@ class TopTracks:
             self.names.append(data['items'][i]['name'])
             self.albums.append(data['items'][i]['album']['name'])
             # artists.append(top['items'][0]['name'])
+
+
+

@@ -9,11 +9,15 @@ from flask_login import LoginManager
 from config import Config
 
 app = Flask(__name__)
+
+
 application = app
+
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
+#login_manager = LoginManager()
 
 wsgi_app = app.wsgi_app
 

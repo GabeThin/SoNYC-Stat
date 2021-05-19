@@ -1,10 +1,102 @@
-<<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <h1>Welcome</h1>
-  </body>
-</html>
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block styles %}
+{{super()}}
+<style>
+  .top_stuff {
+    background-color: #3500D3;
+    /* padding-top: 5px;
+    padding-right: 300px;
+    padding-bottom: 300px;
+    padding-left: 10px;
+    margin-left: 20px; */
+    width: width;
+    height: height/2;
+
+    display: flex;
+    
+    /* margin-right: px; */
+  }
+  .top_songs{
+    background-color: #3500D3;
+    /* background-color: red; */
+    padding-top: 5px;
+    /* display: inline; */
+  }
+  .top_albums{
+    /* background-color:green; */
+    padding-top: 5px;
+    /* display: inline; */
+  }
+  .display_main {
+    display: inline-block;
+    background-color: #190061;
+    padding-top: 10px;
+    padding-right: 100px;
+    padding-bottom: 100px;
+    padding-left: 20px;
+    /* margin-left: 20px; */
+  }
+  body {
+    background-color: black;
+  }
+  h1 {
+    color: white;
+    font-family: "Courier New";
+    margin-left: 200;
+    text-align: center;
+    
+  }
+  h2 {
+    color: white;
+    font-family: "Courier New";
+    text-align: center;
+  }
+  li {
+    color:white;
+    font-size: 20px;
+    padding-left: 20px;
+    margin-left: 100px;
+    padding-right: 20px;
+    margin-right: 100px;
+    font-family: "Courier New";
+  }
+  
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+    <h1>Welcome, {{ session['username'] }}!</h1>
+    <div class= "display_main">
+      <h2> Your Top Weekly Plays</h2>
+      <div class="top_stuff"> 
+        <div class="top_songs">
+          <h2>Top Songs:</h2>
+          <ol>
+            <li>{{data.albums[0]}}</li>
+            <li> {{data.albums[1]}}</li>
+            <li> {{data.albums[2]}}</li>
+            <li> {{data.albums[3]}}</li>
+            <li> {{data.albums[4]}}</li>
+          </ol>
+        </div>
+        <div class="top_albums">
+          <h2>Top Albums:</h2>
+          <ol>
+            <li>{{data.albums[0]}}</li>
+            <li> {{data.albums[1]}}</li>
+            <li> {{data[.albums2]}}</li>
+            <li> {{data.albums[3]}}</li>
+            <li> {{data.albums[4]}}</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    </h1>
+      
+  
+    
+{% endblock %}
