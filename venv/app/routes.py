@@ -84,4 +84,4 @@ def album(album_id):
     album = Album(album_id)
     album.format()
 
-    return render_template('album.html')
+    return render_template('album.html', album=album)

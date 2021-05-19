@@ -7,6 +7,7 @@ class Album:
         self.lengths = []
     def format(self):
         data = spotify.album(self.id)
+        self.title = data['name']
         self.artist = data['artists'][0]['name']
         self.image = data['images'][1]
         for i in range(data['tracks']['total']):
