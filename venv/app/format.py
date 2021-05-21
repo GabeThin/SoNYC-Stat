@@ -1,28 +1,34 @@
 from app import spotify
+import math
 
 class Album:
     def __init__(self, id):
         self.id = id
         self.tracks = []
-        self.lengths = []
     def format(self):
         data = spotify.album(self.id)
         self.title = data['name']
         self.artist = data['artists'][0]['name']
-        self.image = data['images'][1]
+        self.image = data['images'][1]['url']
         for i in range(data['tracks']['total']):
-            self.tracks.append(data['tracks']['items'][i]['name'])
+            track = {}
+            id = data['tracks']['items'][i]['id']
+            track['name'] = data['tracks']['items'][i]['name']
+
             time = data['tracks']['items'][i]['duration_ms']
-            seconds = round((time/1000)%60)
-            minutes = round((time/(1000*60))%60)
-            self.lengths.append(str(minutes) + ':' + str(seconds))
+            minutes = math.floor((time/(1000*60))%60) + 1 if round((time/1000)%60) == 60 else math.floor((time/(1000*60))%60)
+            seconds = round((time/1000)%60) - 60 if round((time/1000)%60) == 60 else round((time/1000)%60)
+            track['length'] = str(minutes) + ':' + str(seconds) if len(str(seconds)) > 1 else str(minutes) + ':0' + str(seconds)
+
+            track['popularity'] = spotify.track(id)['popularity']
+            self.tracks.append(track)
 
 
 class TopTracks:
     def __init__(self):
         self.names = []
         self.artists = []
-        self.albums = []
+        self.album_ids = []
         self.images = []
         self.ids = []
     def format(self):
@@ -30,7 +36,7 @@ class TopTracks:
         for i in range(0, 5):
             self.ids.append(data['items'][i]['album']['id'])
             self.names.append(data['items'][i]['name'])
-            self.albums.append(data['items'][i]['album']['name'])
+            self.album_ids.append(data['items'][i]['album']['id'])
             self.artists.append(data['items'][i]['artists'][0]['name'])
             self.images.append(data['items'][i]['album']['images'][2]['url'])
 
@@ -52,7 +58,7 @@ class RecentlyPlayed:
     def __init__(self):
         self.names = []
         self.artists = []
-        self.albums = []
+        self.album_ids = []
         self.images = []
         self.ids = []
     def format(self):
@@ -60,6 +66,6 @@ class RecentlyPlayed:
         for i in range(0, 5):
             self.ids.append(data['items'][i]['track']['album']['id'])
             self.names.append(data['items'][i]['track']['name'])
-            self.albums.append(data['items'][i]['track']['album']['name'])
+            self.album_ids.append(data['items'][i]['track']['album']['id'])
             self.artists.append(data['items'][i]['track']['artists'][0]['name'])
             self.images.append(data['items'][i]['track']['album']['images'][2]['url'])

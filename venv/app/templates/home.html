@@ -53,7 +53,7 @@
           <ol class="list-group">
             {% for i in range(5) %}
               <img src={{tracks.images[i]}} width="45px" height="45px" class="rounded float-left" padding="5px">
-              <a href="#" style="display: inline-block" class="list-group-item list-group-item-action">{{tracks.artists[i]}} - {% if tracks.names[i] | length > 17 %}{{tracks.names[i][:17]}}... {% else %}{{tracks.names[i]}}{% endif %}</a>
+              <a href="{{ url_for('album', album_id=tracks.album_ids[i]) }}" style="display: inline-block" class="list-group-item list-group-item-action">{{tracks.artists[i]}} - {% if tracks.names[i] | length > 17 %}{{tracks.names[i][:17]}}... {% else %}{{tracks.names[i]}}{% endif %}</a>
               <br>
             {% endfor %}
           </ol>
@@ -64,7 +64,7 @@
             <ol class="list-group">
               {% for i in range(5) %}
                 <img src={{recents.images[i]}} width="45px" height="45px" class="rounded float-left" padding="5px">
-                <a href="#" style = "display: inline-block" class="list-group-item list-group-item-action">{% if (recents.names[i] + recents.artists[i]) | length > 40 %}{{(recents.artists[i]|string + ' - ' + recents.names[i]|string)[:38]}}... {% else %}{{recents.artists[i]}} - {{recents.names[i]}}{% endif %}</a>
+                <a href="{{ url_for('album', album_id=recents.album_ids[i]) }}" style = "display: inline-block" class="list-group-item list-group-item-action">{% if (recents.names[i] + recents.artists[i]) | length > 40 %}{{(recents.artists[i]|string + ' - ' + recents.names[i]|string)[:38]}}... {% else %}{{recents.artists[i]}} - {{recents.names[i]}}{% endif %}</a>
                 <br>
               {% endfor %}
             </ol>

@@ -7,31 +7,54 @@
 {% block styles %}
 {{super()}}
 <style>
-  .top_songs {
+  a {
+    color: white;
+  }
+
+  body {
+      background-color: rgb(39, 7, 39);
+      font-family: "Courier New";
+  }
+
+  nav {
+      background-color: rgb(40, 40, 40);
+  }
+
+  .list-group-item {
+    padding: 0px;
+    margin: 5px;
+  }
+
+  .lists {
+    width: 580px;
     background-color: #190061;
+    font-size: 20px;
     padding-top: 5px;
     padding-right: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
   }
-  a {
-    color: white;
 
+  .display_main {
+    display: inline-block;
+    margin-left: 0px;
   }
+
   h1 {
     color: white;
-  }
-  h2 {
-    color: white;
-  }
-  body {
-      color: rgb(26, 26, 26);
-      font-family: "Courier New";
-  }
-  nav {
-      background-color: rgb(40, 40, 40);
+    text-align: center;
   }
 
+  h2 {
+    color: white;
+    text-align: center;
+  }
+
+  li {
+    font-size: 20px;
+    padding-left: 20px;
+    margin-left: 20px;
+  }
 </style>
 {% endblock %}
 
@@ -46,7 +69,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="#">
-                    <img href="logo.png" width="30" height="30" style="margin-top:5"alt="">
+                    <img href="{{url_for('static', filename='logo.png')}}" width="30" height="30" style="margin-top:5"alt="">
                   </a>
                 <a style = "font-size: 40px;" class ="navbar-brand" href="{{ url_for('index') }}">SoNYC Stat</a>
 

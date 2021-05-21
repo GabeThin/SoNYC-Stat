@@ -1,46 +1,77 @@
 {% extends "base.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
 
+{% block styles %}
+{{super()}}
+<style>
+  .list-group-item {
+    padding: 0px;
+    margin: 5px;
+    color: white;
+    background-color: black;
+    font-size: 20px;
+  }
+  .lists {
+    width: 580px;
+    background-color: #190061;
+    font-size: 20px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+  }
+  .display_main {
+    display: inline-block;
+    margin-left: 0px;
+  }
+  body {
+    background-color: black;
+    font-family: "Courier New";
+  }
+
+  img {
+    margin-left: 20px;
+  }
+
+  .col {
+    background-color: #190061;
+  }
+
+</style>
+{% endblock %}
+
 {% block content %}
-    <h1>{{ album.title[i] }}!</h1>
     <div class="container">
       <div class="row">
-        <div class="col-md-6 lists">
-          <h2>Your Top Songs</h2>
-          <ol class="list-group">
-            {% for i in range(5) %}
-              <img src={{tracks.images[i]}} width="45px" height="45px" class="rounded float-left" padding="5px">
-              <a href="#" style="display: inline-block" class="list-group-item list-group-item-action">{{tracks.artists[i]}} - {% if tracks.names[i] | length > 17 %}{{tracks.names[i][:17]}}... {% else %}{{tracks.names[i]}}{% endif %}</a>
-              <br>
-            {% endfor %}
-          </ol>
+        <div class="col-md-1">
+          <img src="{{album.image}}" width="225" height="225"></img>
         </div>
-
-        <div class="col-md-7 lists">
-          <h2>Recently Played</h2>
-            <ol class="list-group">
-              {% for i in range(5) %}
-                <img src={{recents.images[i]}} width="45px" height="45px" class="rounded float-left" padding="5px">
-                <a href="#" style = "display: inline-block" class="list-group-item list-group-item-action">{{recents.artists[i]}} - {% if recents.names[i] | length > 19 %}{{recents.names[i][:19]}}... {% else %}{{recents.names[i]}}{% endif %}</a>
-                <br>
-              {% endfor %}
-            </ol>
+        <div class="col-md-8">
+          <h1 style="margin-left: 200px; margin-top:70px">{{ album.title }}</h1>
+          <h2><a href="#" style="margin-left: 200px">{{ album.artist }}</a></h2>
         </div>
       </div>
-      <div class = "row">
-        <div class="col-md-3"></div>
-        <div class="col-md-7 lists">
-          <h2>Your Top Artists</h2>
-            <ol class="list-group">
-              {% for i in range(5) %}
-                <img src={{artists.images[i]}} width="45px" height="45px" class="rounded float-left" padding="5px">
-                <a href="#" style = "display: inline-block" class="list-group-item list-group-item-action">{{artists.names[i]}}</a>
-                <br>
-              {% endfor %}
-            </ol>
-        </div>
-        <div class="col-md-11"></div
-      </div
+      <div class="row">
+        <div class = "col">
+          <h2>Tracks</h2>
+          <div class="list-group">
+            <div class="list-group-item">
+              <p style="float:left; margin-left:80px">Title</p>
+              <p style="float:right; margin-right:50px">Popularity</p>
+              <p style="float:right; margin-right:100px">Length</p>
+              <div style="clear: both;"></div>
+            </div>
+            {% for track in album.tracks %}
+              <div class="list-group-item">
+                <p style="float:left">{% if track['name'] | length < 60 %}{{ track['name'] }}{% else %} {{ track['name'][:60] }}... {% endif %}</p>
+                <p style="float:right; margin-right:85px">{{ track['popularity'] }}</p>
+                <p style="float:right; margin-right:170px">{{ track['length'] }}</p>
+                <div style="clear: both;"></div>
+              </div>
+            {% endfor %}
+          </div>
+        </div
+      </div>
     </div>
 
 
