@@ -12,7 +12,7 @@ import base64, json, requests, threading
 client_id = 'f5eb6f7b95d84bd48dea9a50c1cca18f'
 client_secret = '37a907df23374db5b9ac602f4847c2b4'
 
-redirect_base = 'https://sonyc-stat.herokuapp.com/'
+redirect_base = 'https://sonyc-stat.herokuapp.com'
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
