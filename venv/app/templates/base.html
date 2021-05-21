@@ -78,11 +78,11 @@
                 <ul class="nav navbar-nav">
                     {% if session['logged_in'] %}
                       <div class="input-group rounded">
-                          <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" style="margin: 7px; width: 150px">
-                          <span class="input-group-text border-0" id="search-addon">
-                            <i class="fas fa-search"></i>
-                          </span>
+                        <div class="input-group">
+                          <input type="search" class="form-control rounded" aria-label="Search" aria-describedby="search-addon" />
+                          <button type="button" style="display:inline-block" class="btn btn-outline-primary">SEARCH</button>
                         </div>
+                      </div>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
